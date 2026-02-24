@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - Lost & Found</title>
+
+    <style>
+       /* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* Background */
+body {
+    height: 100vh;
+    background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Login Card */
+.login-container {
+    background: #ffffff;
+    padding: 40px;
+    width: 340px;
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    transition: 0.3s ease;
+}
+
+.login-container:hover {
+    transform: translateY(-5px);
+}
+
+/* Heading */
+.login-container h2 {
+    margin-bottom: 25px;
+    color: #333;
+    font-weight: 600;
+}
+
+/* Input Fields */
+input {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+input:focus {
+    border-color: #3a7bd5;
+    box-shadow: 0 0 5px rgba(58, 123, 213, 0.5);
+    outline: none;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+}
+
+/* Hover Effect */
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Click Effect */
+button:active {
+    transform: scale(0.97);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Success / Error Message */
+.message {
+    margin-top: 15px;
+    font-size: 14px;
+    font-weight: 500;
+}
+    </style>
+</head>
+
+<body>
+
+<div class="login-container">
+    <h2>Login</h2>
+
+    <form id="loginForm">
+        <input type="text" id="username" placeholder="Enter Username">
+        <input type="password" id="password" placeholder="Enter Password">
+
+        <button type="submit" id="loginBtn">Login</button>
+
+        <div id="message" class="message"></div>
+    </form>
+</div>
+
+<script>
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        let username = document.getElementById("username").value.trim();
+        let password = document.getElementById("password").value.trim();
+        let message = document.getElementById("message");
+        let button = document.getElementById("loginBtn");
+
+        if (username !== "" && password !== "") {
+            alert("data saved")
+            message.innerHTML = "✅ Data Saved! Login Successful";
+            message.style.color = "green";
+
+            button.style.backgroundColor = "green";
+        } else {
+            alert("please fill all data");
+            message.innerHTML = "❌ Please fill all fields";
+            message.style.color = "red";
+        }
+    });
+</script>
+
+</body>
+</html>

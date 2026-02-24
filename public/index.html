@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lost & Found Portal</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: #f4f6f9;
+        }
+
+        header {
+            background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+            padding: 15px 40px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 22px;
+        }
+
+        .controls {
+            padding: 20px 40px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        input, select, textarea {
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            width: 200px;
+        }
+
+        textarea {
+            width: 300px;
+            height: 60px;
+            resize: none;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .btn-primary {
+            background: #3a7bd5;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2e5fa3;
+        }
+
+        .btn-filter {
+            background: #6c757d;
+            color: white;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px 40px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+
+        .card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .tag {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: white;
+        }
+
+        .lost { background: #dc3545; }
+        .found { background: #28a745; }
+
+        .add-form {
+            padding: 20px 40px;
+            background: white;
+            margin: 20px 40px;
+            border-radius: 10px;
+            display: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Trackit - Lost & Found Portal</h1>
+</header>
+
+<div class="controls">
+    <input type="text" id="searchInput" placeholder="Search item...">
+    <button class="btn-filter" onclick="filterItems('ALL')">All</button>
+    <button class="btn-filter" onclick="filterItems('LOST')">Lost</button>
+    <button class="btn-filter" onclick="filterItems('FOUND')">Found</button>
+    <button class="btn-primary" onclick="toggleForm()">Add Item</button>
+</div>
+
+<div class="add-form" id="addForm">
+    <input type="text" id="itemName" placeholder="Item Name">
+    <input type="text" id="location" placeholder="Location">
+    <input type="date" id="date">
+    <input type="text" id="contact" placeholder="Contact Info">
+    <select id="type">
+        <option value="LOST">Lost</option>
+        <option value="FOUND">Found</option>
+    </select>
+    <textarea id="description" placeholder="Description"></textarea>
+    <input type="file" id="photo" accept="image/*">
+    <button class="btn-primary" onclick="addItem()">Save</button>
+</div>
+
+<div class="container" id="itemsContainer"></div>
+
+<script>
+    let items = [];
+let idCounter = 1;
+    function displayItems(filteredItems) {
+        let container = document.getElementById("itemsContainer");
+        container.innerHTML = "";
+
+        filteredItems.forEach(item => {
+            container.innerHTML += `
+                <div class="card">
+                    ${item.photo ? `<img src="${item.photo}">` : ""}
+                    <h3>${item.name}</h3>
+                    <p><strong>Location:</strong> ${item.location}</p>
+                    <p><strong>Date:</strong> ${item.date}</p>
+                    <p><strong>Contact:</strong> ${item.contact}</p>
+                    <p>${item.description}</p>
+                    <a href="/maproutes/${item.id}" target="_blank">📍 View Location
+</a>
+<br><br>
+<span class="tag ${item.type.toLowerCase()}">${item.type}</span>
+                    <span class="tag ${item.type.toLowerCase()}">${item.type}</span>
+                </div>
+            `;
+        });
+    }
+
+    function addItem() {
+        let name = document.getElementById("itemName").value;
+        let location = document.getElementById("location").value;
+        let date = document.getElementById("date").value;
+        let contact = document.getElementById("contact").value;
+        let type = document.getElementById("type").value;
+        let description = document.getElementById("description").value;
+        let photoInput = document.getElementById("photo");
+
+        if(name && location) {
+
+            let reader = new FileReader();
+
+            reader.onload = function(e) {
+                let photoURL = e.target.result;
+
+                items.push({
+                     id: idCounter++,
+                    name,
+    location,
+    date,
+    contact,
+    type,
+    description,
+    photo: photoURL
+                });
+
+                displayItems(items);
+            };
+
+            if(photoInput.files[0]) {
+                reader.readAsDataURL(photoInput.files[0]);
+            } else {
+                items.push({
+                    name,
+                    location,
+                    date,
+                    contact,
+                    type,
+                    description,
+                    photo: ""
+                });
+
+                displayItems(items);
+            }
+
+            document.getElementById("addForm").reset();
+        }
+    }
+
+    function filterItems(type) {
+        if(type === "ALL") {
+            displayItems(items);
+        } else {
+            let filtered = items.filter(item => item.type === type);
+            displayItems(filtered);
+        }
+    }
+
+    function toggleForm() {
+        let form = document.getElementById("addForm");
+        form.style.display = form.style.display === "flex" ? "none" : "flex";
+    }
+
+    document.getElementById("searchInput").addEventListener("keyup", function() {
+        let value = this.value.toLowerCase();
+        let filtered = items.filter(item => item.name.toLowerCase().includes(value));
+        displayItems(filtered);
+    });
+</script>
+
+</body>
+</html>
