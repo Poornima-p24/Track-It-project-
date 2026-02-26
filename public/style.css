@@ -1,9 +1,8 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', sans-serif;
-    scroll-behavior: smooth;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
 }
 
 body {
@@ -15,7 +14,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 60px;
+    padding: 19px 60px;
     background: white;
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     position: sticky;
@@ -36,7 +35,7 @@ body {
 }
 
 .logo {
-    font-size: 20px;
+    font-size: 28px;
     font-weight: bold;
     color: #3a7bd5;
 }
@@ -126,23 +125,27 @@ body {
 .card {
     background: white;
     padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.06);
     transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
 .card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-6px);
 }
 
 .card img {
     width: 100%;
-    height: 180px;
+    max-width: 220px;   /* limits image width */
+    aspect-ratio: 1 / 1; /* perfect square */
     object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 10px;
+    border-radius: 14px;
+    margin-bottom: 15px;
 }
-
 .tag {
     padding: 5px 12px;
     border-radius: 20px;
@@ -176,13 +179,164 @@ body {
     background: white;
 }
 
-.contact {
-    background: #f9fafb;
+.contact-section {
+    padding: 100px 60px;
+    background: linear-gradient(135deg, #e0f2fe, #f8fafc);
 }
 
-footer {
-    text-align: center;
-    padding: 20px;
-    background: #111;
+.contact-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.contact-left h2 {
+    font-size: 34px;
+    margin-bottom: 15px;
+    color: #0ea5e9;
+}
+
+.contact-left p {
+    color: #555;
+    margin-bottom: 25px;
+}
+
+.faq-box {
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+}
+
+.faq-box li {
+    margin-bottom: 12px;
+    color: #333;
+    transition: 0.3s;
+}
+
+.faq-box li:hover {
+    color: #0ea5e9;
+    transform: translateX(5px);
+}
+
+.contact-right form {
+    background: white;
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.contact-right input,
+.contact-right select,
+.contact-right textarea {
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.contact-right input:focus,
+.contact-right select:focus,
+.contact-right textarea:focus {
+    border-color: #0ea5e9;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(14,165,233,0.1);
+}
+
+.contact-right textarea {
+    resize: none;
+    height: 120px;
+}
+
+.contact-right button {
+    padding: 14px;
+    background: linear-gradient(135deg, #0ea5e9, #0284c7);
     color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.contact-right button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(14,165,233,0.3);
+}
+
+.success-message {
+    text-align: center;
+    color: green;
+    font-weight: 500;
+    display: none;
+    margin-top: 10px;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+/* Responsive */
+@media(max-width: 768px) {
+    .contact-wrapper {
+        grid-template-columns: 1fr;
+    }
+}
+footer { text-align: center; padding: 20px; background: #423939; color: white; }
+/* HOW IT WORKS */
+.how-it-works {
+    padding: 80px 60px;
+    text-align: center;
+    background: #f8fafc;
+}
+
+.how-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.how-card {
+    background: white;
+    padding: 30px;
+    border-radius: 18px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+    transition: 0.3s;
+}
+
+.how-card:hover {
+    transform: translateY(-8px);
+}
+
+.how-card .icon {
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+
+/* STATS */
+.stats-section {
+    display: flex;
+    justify-content: space-around;
+    padding: 70px 60px;
+   background: linear-gradient(135deg, #dbeafe, #f0f9ff);
+    color: rgb(27, 25, 25);
+    flex-wrap: wrap;
+}
+
+.stat-card {
+    text-align: center;
+    margin: 20px;
+}
+
+.stat-card h2 {
+    font-size: 42px;
+    margin-bottom: 10px;
 }

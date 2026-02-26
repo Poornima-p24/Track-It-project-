@@ -120,3 +120,4 @@ app.get("/view-photo/:id", (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
 });
+app.use("/api", require("./routes/statsRoutes"));

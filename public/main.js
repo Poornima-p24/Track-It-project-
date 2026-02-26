@@ -1,147 +1,140 @@
-// main.js
+// ===== STORAGE =====
+let items = JSON.parse(localStorage.getItem("trackitItems")) || [];
 
-let items = [];
+// ===== TOGGLE ADD FORM =====
+function toggleForm() {
+    const form = document.getElementById("addForm");
+    form.style.display = form.style.display === "flex" ? "none" : "flex";
+}
 
-// Load items from server when page opens
-window.onload = async function () {
-    await loadItems();
-};
+// ===== IMAGE PREVIEW =====
+document.getElementById("photo").addEventListener("change", function () {
+    const file = this.files[0];
+    const preview = document.getElementById("preview");
 
-// Fetch all items from backend
-async function loadItems() {
-    try {
-        const res = await fetch("/items");
-        items = await res.json();
-        displayItems(items);
-    } catch (err) {
-        console.error("Failed to load items:", err);
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            preview.src = e.target.result;
+            preview.style.display = "block";
+        };
+        reader.readAsDataURL(file);
     }
-}
+});
 
-// Display items
-function displayItems(filteredItems) {
-    const container = document.getElementById("itemsContainer");
-    container.innerHTML = "";
-
-    filteredItems.forEach(item => {
-        container.innerHTML += `
-            <div class="card">
-                ${item.photo ? `
-                    <img src="${item.photo}" class="thumbnail">
-                ` : ""}
-
-                <h3>${item.name}</h3>
-                <p><strong>Location:</strong> ${item.location}</p>
-                <p>${item.description}</p>
-
-                ${item.photo ? `
-                    <a href="/view-photo/${item.id}">
-                        <button class="btn-primary">📷 View Photo</button>
-                    </a>
-                ` : ""}
-
-                <br><br>
-                <span class="tag ${item.type.toLowerCase()}">${item.type}</span>
-            </div>
-        `;
-    });
-    console.log(item);
-}
-
-// Upload photo to backend
-async function uploadPhoto(file) {
-    const formData = new FormData();
-    formData.append("photo", file);
-
-    const res = await fetch("/upload", {
-        method: "POST",
-        body: formData
-    });
-
-    const data = await res.json();
-    return data.photoPath;
-}
-
-// Add item (Save button)
-async function addItem() {
+// ===== ADD ITEM =====
+function addItem() {
     const name = document.getElementById("itemName").value;
     const location = document.getElementById("location").value;
     const date = document.getElementById("date").value;
     const contact = document.getElementById("contact").value;
     const type = document.getElementById("type").value;
     const description = document.getElementById("description").value;
-    const photoInput = document.getElementById("photo");
+    const photo = document.getElementById("preview").src;
 
-    if (!name || !location) {
-        alert("Please fill Name and Location");
+    if (!name || !location || !date || !contact || !description) {
+        alert("Please fill all fields");
         return;
     }
 
-    let photoPath = "";
+    const newItem = {
+        id: Date.now(),
+        name,
+        location,
+        date,
+        contact,
+        type,
+        description,
+        photo
+    };
 
-    // Upload photo first
-    if (photoInput.files[0]) {
-        photoPath = await uploadPhoto(photoInput.files[0]);
-    }
+    items.unshift(newItem);
+    localStorage.setItem("trackitItems", JSON.stringify(items));
 
-    // Save item to backend
-    const res = await fetch("/save-item", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            name,
-            location,
-            date,
-            contact,
-            type,
-            description,
-            photo: photoPath
-        })
-    });
-
-    const data = await res.json();
-
-    if (data.success) {
-        await loadItems(); // reload items from server
-        document.getElementById("addForm").reset();
-        document.getElementById("preview").style.display = "none";
-    } else {
-        alert("Error saving item");
-    }
+    displayItems(items);
+    document.getElementById("addForm").style.display = "none";
+    alert("Item added successfully!");
 }
 
-// Filter
+// ===== DISPLAY ITEMS =====
+function displayItems(data) {
+    const container = document.getElementById("itemsContainer");
+    container.innerHTML = "";
+
+    if (data.length === 0) {
+        container.innerHTML = "<p style='text-align:center;'>No items found.</p>";
+        return;
+    }
+
+    data.forEach(item => {
+        const tagClass = item.type === "LOST" ? "lost" : "found";
+
+        container.innerHTML += `
+            <div class="card">
+                ${item.photo ? `<img src="${item.photo}">` : ""}
+                <span class="tag ${tagClass}">${item.type}</span>
+                <h3>${item.name}</h3>
+                <p><strong>Location:</strong> ${item.location}</p>
+                <p><strong>Date:</strong> ${item.date}</p>
+                <p>${item.description}</p>
+                <p><strong>Contact:</strong> ${item.contact}</p>
+            </div>
+        `;
+    });
+}
+
+// ===== FILTER =====
 function filterItems(type) {
     if (type === "ALL") {
         displayItems(items);
     } else {
-        displayItems(items.filter(item => item.type === type));
+        const filtered = items.filter(item => item.type === type);
+        displayItems(filtered);
     }
 }
 
-// Toggle form
-function toggleForm() {
-    const form = document.getElementById("addForm");
-    form.style.display = form.style.display === "flex" ? "none" : "flex";
-}
-
-// Search
+// ===== SEARCH =====
 document.getElementById("searchInput").addEventListener("keyup", function () {
-    const value = this.value.toLowerCase();
-    displayItems(items.filter(item =>
-        item.name.toLowerCase().includes(value)
-    ));
+    const keyword = this.value.toLowerCase();
+
+    const filtered = items.filter(item =>
+        item.name.toLowerCase().includes(keyword) ||
+        item.location.toLowerCase().includes(keyword) ||
+        item.description.toLowerCase().includes(keyword)
+    );
+
+    displayItems(filtered);
 });
 
-// Photo preview
-document.getElementById("photo").addEventListener("change", function () {
-    const preview = document.getElementById("preview");
+// ===== CONTACT FORM SUCCESS =====
+document.getElementById("contactForm").addEventListener("submit", function (e) {
+    e.preventDefault();
 
-    if (this.files[0]) {
-        preview.src = URL.createObjectURL(this.files[0]);
-        preview.style.display = "block";
-    } else {
-        preview.src = "";
-        preview.style.display = "none";
+    const successMsg = document.getElementById("successMessage");
+    successMsg.style.display = "block";
+
+    this.reset();
+
+    setTimeout(() => {
+        successMsg.style.display = "none";
+    }, 3000);
+});
+
+// ===== INITIAL LOAD =====
+displayItems(items);
+// ===== FETCH STATS =====
+async function loadStats() {
+    try {
+        const res = await fetch("/api/stats");
+        const data = await res.json();
+
+        document.getElementById("totalItems").innerText = data.totalItems;
+        document.getElementById("recoveredItems").innerText = data.recoveredItems;
+        document.getElementById("totalUsers").innerText = data.totalUsers;
+
+    } catch (error) {
+        console.log("Error loading stats");
     }
-});
+}
+
+loadStats();

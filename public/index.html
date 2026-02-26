@@ -9,11 +9,11 @@
 
 <!-- NAVBAR -->
 <nav class="navbar">
-    <div class="logo">Trackit</div>
+    <div class="logo">🔍 TrackIt</div>
     <ul>
         <li><a href="#home">Home</a></li>
         <li><a href="#items">Browse Items</a></li>
-        <li><a href="#about">About</a></li>
+        <li><a href="about.html">About</a></li>
         <li><a href="#contact">Contact</a></li>
     </ul>
     <button class="post-btn" onclick="toggleForm()">+ Post Item</button>
@@ -23,7 +23,6 @@
 <section class="hero" id="home">
     <h1>Reunite With Your Lost Items</h1>
     <p>Helping communities reconnect lost belongings with their owners.</p>
-
     <div class="hero-buttons">
         <a href="#items" class="primary-btn">Browse Items</a>
         <a href="#items" class="secondary-btn">Report Lost Item</a>
@@ -50,6 +49,7 @@
     </select>
     <textarea id="description" placeholder="Description"></textarea>
     <input type="file" id="photo" accept="image/*">
+    <img id="preview" width="200" style="display:none; border:1px solid #ccc; margin-top:10px;">
     <button class="primary-btn" onclick="addItem()">Save</button>
 </div>
 
@@ -64,17 +64,101 @@
     <h2>About Trackit</h2>
     <p>Trackit is a community-driven lost and found portal where users can report lost or found items and help reunite them with their rightful owners.</p>
 </section>
+<section class="contact-section" id="contact">
+    <div class="contact-wrapper">
+        
+        <div class="contact-left">
+            <h2>Get In Touch</h2>
+            <p>Have questions? Need help reporting an item? We're here to assist you.</p>
 
-<!-- CONTACT SECTION -->
-<section class="contact" id="contact">
-    <h2>Contact Us</h2>
-    <p>Email: support@trackit.com</p>
-    <p>Phone: +91 9876543210</p>
+            <div class="faq-box">
+                <h4>💬 Common Questions</h4>
+                <ul>
+                    <li>How do I report a lost item?</li>
+                    <li>How can I upload a photo?</li>
+                    <li>How long are items stored?</li>
+                    <li>Can I edit my posted item?</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="contact-right">
+            <form id="contactForm">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Email" required>
+
+                <select required>
+                    <option value="">Select Question Type</option>
+                    <option>Report Lost Item</option>
+                    <option>Report Found Item</option>
+                    <option>Account Help</option>
+                    <option>Other</option>
+                </select>
+
+                <textarea placeholder="Write your message..." required></textarea>
+
+                <button type="submit">Send Message</button>
+
+                <p class="success-message" id="successMessage">
+                    ✅ Message sent successfully!
+                </p>
+            </form>
+        </div>
+
+    </div>
 </section>
 
-<footer>
-    © 2026 Trackit. All rights reserved.
-</footer>
+<!-- HOW IT WORKS -->
+<section class="how-it-works">
+    <h2 class="section-title">How It Works</h2>
+    <div class="how-container">
+
+        <div class="how-card">
+            <div class="icon">📢</div>
+            <h3>Post Item</h3>
+            <p>Report a lost or found item with details and image.</p>
+        </div>
+
+        <div class="how-card">
+            <div class="icon">🔍</div>
+            <h3>Browse & Search</h3>
+            <p>Search or filter items to find matches easily.</p>
+        </div>
+
+        <div class="how-card">
+            <div class="icon">🤝</div>
+            <h3>Reconnect</h3>
+            <p>Contact the poster and reunite with your item.</p>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- STATS SECTION -->
+<section class="stats-section">
+    <div class="stat-card">
+        <h2 id="totalItems">0</h2>
+        <p>Items Posted</p>
+    </div>
+
+    <div class="stat-card">
+        <h2 id="recoveredItems">0</h2>
+        <p>Items Recovered</p>
+    </div>
+
+    <div class="stat-card">
+        <h2 id="totalUsers">0</h2>
+        <p>Registered Members</p>
+    </div>
+</section>
+
+
+
+
+
+
+<footer> © 2026 Trackit. All rights reserved. </footer>
 
 <script src="main.js"></script>
 </body>
